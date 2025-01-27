@@ -6,72 +6,62 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:16:24 by mavissar          #+#    #+#             */
-/*   Updated: 2025/01/27 13:49:41 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/01/27 20:10:41 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philospher.h"
+//The correct input must be ./philo 5 800 200 200  
+//
+//
+//
 
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	else
-		return (0);
-}
-static void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-void	ft_putnbr(int nb)
-{
-	int num;
+#include "philo.h"
 
-	num = nb;
-	if (num < 0)
-	{
-		num *= -1;
-		ft_putchar('-');
-	}
-	if (num > 9)
-	{
-		ft_putnbr(num / 10);
-	}
-	ft_putchar(num % 10 + 48);
+void    exit_erro(const char *error)
+{
+    printf("%s\n", error);
+    exit(EXIT_FAILURE);
+}
+static inline bool  is_digit(int c)
+{
+    return (c >= '0' && c <= '9');
 }
 
-int	ft_atoi(char *str)
+static inline bool is_space(int c)
 {
-	int neg;
-	int num;
-	int i;
+    return ((c >= 9 && c <= 13) || c == 32);
+}
+static long atol(const char *str)
+{
+    long    num;
 
-	i = 0;
-	neg = 1;
-	num = 0;
-	while (str[i] <= ' ')
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-		{
-			neg *= -1;
-		}
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		num = num * 10 + (str[i] - 48);
-		i++;
-	}
-	return (num * neg);
+    num = 0;
+    str = valid_input(str);
+    while (is_digit(*str))
+        num = (num * 10) + (*str++ - 48);
+    if (num > INT_MAX)
+        exit_error("INT_MAX is the limit\n");
+    return (num);
+}
+static const char valid_input(const char *str)
+{
+    int len;
+    const char *nb;
+
+    len = 0;
+    while(is_space(*str))
+        *str++;
+    if (*str == '+')
+        *str++;
+    else if (*str == '-')
+        exit_error("Only positive number accepted");
+    if (!is_digit(*str))
+        exit_error("Wrong input! Only digits accepted");
+    nb = str;
+    while(is_digit(*str++))
+        len++;
+    if (len > 10)
+        exit_error("Wrong value! Maximum value is int max");
+    return (nb);
 }
 
-int	main(int argc, char **argv)
-{
-	int j;
-
-	j = ft_atoi(argv[1]);
-	ft_putnbr(j);
-	return (0);
-}
