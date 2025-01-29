@@ -22,6 +22,7 @@ Use typedef struct if:
 # include <stdlib.h>   // malloc, free
 # include <sys/time.h> // gettimeofday
 # include <unistd.h>   //write, usleep
+# include <errno.h> // to handle errors
 
 # ifndef COLORS_H
 #  define COLORS_H
@@ -55,6 +56,16 @@ Use typedef struct if:
 /*                                  STRUCTURES				                  */
 /* ************************************************************************** */
 
+typedef enum e_opcode {
+	LOCK,
+	UNLOCK,
+	INIT,
+	DESTROY,
+	CREATE,
+	JOIN,
+	DETACH,
+}	t_opcode;
+
 typedef pthread_mutex_t	t_mtx;
 
 typedef struct s_philo
@@ -63,8 +74,8 @@ typedef struct s_philo
 	long				meals_count;
 	bool				full;
 	long 				last_meal_time; // time passed from last meal intake
-	t_fork				*left_fork;
-	t_fork				*right_fork;
+	t_fork				*first_fork;
+	t_fork				*second_fork;
 	pthread_t 			thread_id; // eahc philo is a thread
 	t_table				*table;
 }						t_philo;
@@ -94,6 +105,15 @@ typedef struct s_table
 /* ************************************************************************** */
 /*                                	CODE									  */
 /* ************************************************************************** */
+/*utils*/
 void					exit_error(const char *error);
+
+/*safety functions*/
+void					*safe_malloc(size_t bytes);
+void	*safe_mutex(t_mtx *mutex, t_opcode opcode);
+void	*safe_thread(pthread_t *thread, void *(*foo)(void*), void *data, t_opcode opcode);
+/*init*/
+void	data_init(t_table *table);
+
 
 #endif
