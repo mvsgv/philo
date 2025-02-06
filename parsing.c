@@ -6,7 +6,7 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 13:16:24 by mavissar          #+#    #+#             */
-/*   Updated: 2025/01/27 20:09:10 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/02/06 17:18:29 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 #include "philo.h"
 
-void	exit_erro(const char *error)
+void	exit_error(const char *error)
 {
 	printf("%s\n", error);
 	exit(EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:17:50 by mavissar          #+#    #+#             */
-/*   Updated: 2025/01/29 16:53:27 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/02/06 16:46:56 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ void	data_init(t_table *table)
 	
 	i = 0;
 	table->end_simulation = false;
+	table->all_threads_ready = false;
 	table->philos = safe_malloc(sizeof(t_philo) * table->nbr_philo);
+	safe_mutex(&table->table_mutex, INIT);
 	table->forks = safe_malloc(sizeof(t_fork) * table->nbr_philo);
 	while (i < table->nbr_philo)
 	{
