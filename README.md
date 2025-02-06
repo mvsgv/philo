@@ -56,9 +56,9 @@ Setters and getters are methods commonly used in object-oriented programming (OO
 Getter: A method that retrieves (or "gets") the value of a private or protected property of an object. It's used to access the value of the property without directly exposing the property itself.
 
 Why use them?
-Encapsulation: Setters and getters help encapsulate the data, meaning that you can control how the data is accessed or modified. This allows you to add checks or                            additional logic without exposing the internal implementation.
-Security: By making properties private and using getters/setters, you can prevent outside code from directly modifying internal data in an uncontrolled way.
-Flexibility: You can change how the data is stored or accessed without changing the public interface of the object.
+- Encapsulation: Setters and getters help encapsulate the data, meaning that you can control how the data is accessed or modified. This allows you to add checks or                            additional logic without exposing the internal implementation.
+- Security: By making properties private and using getters/setters, you can prevent outside code from directly modifying internal data in an uncontrolled way.
+- Flexibility: You can change how the data is stored or accessed without changing the public interface of the object.
 
 In multithreaded environments, multiple threads can access or modify shared resources simultaneously. Getters and Setters can help synchronize access to these shared properties, ensuring thread safety.
 
