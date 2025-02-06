@@ -1,6 +1,6 @@
 PHILOSOPHER 
-https://github.com/ArnoChansarel/philo/blob/master/docs/thread.jpeg
-￼
+￼![D49E82AE-C5E5-47F5-80FD-D534998E1474](https://github.com/user-attachments/assets/a03ea56b-c233-4c88-a282-5a038fc3b4d3)
+
 *Introduction*
 - A thread is a single sequence stream within a process. Because threads have some of the properties of processes, they are sometimes called lightweight processes. What are the differences between process and thread? Threads are not independent from each other unlike processes. A thread is a basic unit of execution of any process. A program comprises many processes and all the processes comprise much simpler units known as threads. So, the thread can be referred to as the basic unit of a process or it is the simpler unit that tother makes the CPU utilization.
 - CPU - Un processeur (CPU) est un composant matériel qui constitue l'unité centrale de traitement d'un serveur.
