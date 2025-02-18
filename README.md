@@ -4,12 +4,15 @@ PHILOSOPHER
 *Introduction*
 - A thread is a single sequence stream within a process. Because threads have some of the properties of processes, they are sometimes called lightweight processes. What are the differences between process and thread? Threads are not independent from each other unlike processes. A thread is a basic unit of execution of any process. A program comprises many processes and all the processes comprise much simpler units known as threads. So, the thread can be referred to as the basic unit of a process or it is the simpler unit that tother makes the CPU utilization.
 - CPU - Un processeur (CPU) est un composant matériel qui constitue l'unité centrale de traitement d'un serveur.
+
 We already have commands like pthread_join, pthread_create etc that will execute a function I will send to it. 
 
 We have to define the place where the API can stock our information about the threat (like a structure for example) in threads we gonna use a simple  variable of type ‘pthread_t’ declaration (like in , char etc).  
 
 - API is the acronym for application programming interface a software intermediary that allows two applications to talk to each other. APIs are an accessible way to extract and share data within and across organizations.
-  MUTEX
+
+MUTEX
+
 A mutex is a MUTual EXclusion device, and is useful for protecting shared data structures from concurrent modifications, and implementing critical sections and monitors.
 - pthread_mutex_init initializes the mutex object pointed to by mutex according to the mutex attributes pthread_join - the wait function for threads
 - pthread_mutex_lock locks the given mutex. If the mutex is currently unlocked, it becomes locked and owned by the calling thread, and pthread_mutex_lock returns immediately. If the mutex is already locked by another thread, pthread_mutex_lock suspends the calling thread until the mutex is unlocked. 
