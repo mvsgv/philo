@@ -1,27 +1,27 @@
 NAME = philo
 
-CC = gcc
+CC = cc
 
-FLAGS = -Wall -Werror -Wextra 
+CFLAGS = -Wall -Werror -Wextra -pthread
 SRCS = \
-			./srcs/getters_setters \
-			./srcs/init \
-			./srcs/parsing \
-			./srcs/philo \
-			./srcs/safety \
-			./srcs/start \
-			./srcs/status \
-			./srcs/synchro 
+			./srcs/philo.c \
+			./srcs/getters_setters.c \
+			./srcs/init.c \
+			./srcs/parsing.c \
+			./srcs/safety.c \
+			./srcs/start.c \
+			./srcs/status.c \
+			./srcs/synchro.c 
 
 OBJ = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-%.o: %.c $(HEADER)
+%.o: %.c
 	@ $(CC) -c $(CFLAGS) -I includes -o $@ $<
 
 $(NAME): $(OBJ)
-	@ $(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	@ $(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean:
 	@echo "Cleaning"

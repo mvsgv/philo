@@ -6,7 +6,7 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:16:01 by mavissar          #+#    #+#             */
-/*   Updated: 2025/02/18 22:09:17 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/02/25 16:20:28 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,34 @@
 /*spinlock to synchromiwe philo start*/
 void	wait_all_threads(t_table *table)
 {
-	while (!get_bool(&table->table_mutex, table->all_threads_ready)) // this is a spinlock
+	while (!get_bool(&table->table_mutex, &table->all_threads_ready)) // this is a spinlock
 	; 
+}
+
+bool	all_threads_running(t_mtx *mutex, long *threads, long nbr_philo)
+{
+	bool	ret;
+	
+	ret = false;
+	safe_mutex(mutex, LOCK);
+	if (*threads == nbr_philo)
+		ret = true;
+	safe_mutex(mutex, UNLOCK);
+	return (ret);
+}
+
+void	increase_long(t_mtx *mutex, long *value)
+{
+	safe_mutex(mutex, LOCK);
+	(*value)++;
+	safe_mutex(mutex, UNLOCK);
 }
 long	gettime(t_time_code time_code)
 {
 	struct timeval	tv;
 	
 	if (gettimeofday(&tv, NULL))
-		exit_error("Gettimeofday failed");
+		ft_exit_error("Gettimeofday failed");
 	else if (SECOND == time_code)
 		return (tv.tv_sec + (tv.tv_usec / 1e6));
 	else if (MILISECOND== time_code)
@@ -35,7 +54,7 @@ long	gettime(t_time_code time_code)
 	else if (MICROSECOND == time_code)
 		return ((tv.tv_sec * 1e6) + tv.tv_usec);
 	else
-		exit_error("Wron gettime input");
+		ft_exit_error("Wron gettime input");
 	return (42);
 }
 

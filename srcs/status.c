@@ -6,7 +6,7 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 13:33:47 by mavissar          #+#    #+#             */
-/*   Updated: 2025/02/18 22:08:09 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/02/25 16:19:52 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	write_status(t_philo_status status, t_philo *philo, bool debug)
 		else if ((THINKING == status) && !simulation_finished(philo->table))
 			printf(W"%-6ld"RST" %d started thinking\n", time_left, philo->id);
 		else if ((DIED == status))
-			printf(R"%-6ld"RST" died", time_left,philo->id);
+			printf(R"%-6ld"RST" %d died\n", time_left, philo->id);
 	}
 	safe_mutex(&philo->table->write_mutex, UNLOCK);
 
