@@ -4,14 +4,9 @@ CC = cc
 
 CFLAGS = -Wall -Werror -Wextra -pthread
 SRCS = \
-			./srcs/philo.c \
-			./srcs/getters_setters.c \
-			./srcs/init.c \
+			./srcs/main.c \
 			./srcs/parsing.c \
-			./srcs/safety.c \
-			./srcs/start.c \
-			./srcs/status.c \
-			./srcs/synchro.c 
+			
 
 OBJ = $(SRCS:.c=.o)
 

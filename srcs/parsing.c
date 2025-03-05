@@ -1,83 +1,65 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 13:16:24 by mavissar          #+#    #+#             */
-/*   Updated: 2025/02/25 17:19:33 by mavissar         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "philo.h"
 
 //The correct input must be ./philo 5 800 200 200  
-//
-//
-//
-
-#include "../inc/philo.h"
-
-void	ft_exit_error(const char *error)
+void    error_msg(char *error)
 {
-	printf("%s\n", error);
-	exit(EXIT_FAILURE);
+    printf("%s\n", error);
+    exit(EXIT_FAILURE);
 }
-static inline bool	is_digit(int c)
+static inline bool is_digit(int c)
 {
-	return (c >= '0' && c <= '9');
+    return (c >= '0' && c <= '9');
 }
 
-static inline bool is_space(int c)
+static long valid_input_check(const char *str)
 {
-	return ((c >= 9 && c <= 13) || c == 32);
-}
-//check for neg numb and legit nb
-static const char *valid_input(const char *str)
-{
-	int	len;
-	int i;
-	const char *nb;
+    long    index;
+    long    len;
+    char    nb;
 
-	len = 0;
-	i = 0;
-	while(is_space(*str))
-		str++;
-	if (*str == '+')
-		str++;
-	else if (*str == '-')
-		ft_exit_error("Only positive number accepted");
-	if (!is_digit(*str))
-		ft_exit_error("Wrong input! Only digits accepted");
-	nb = str;
-	while(is_digit(*str++))
-		len++;
-	if (len > 10)
-		ft_exit_error("Wrong value! Maximum value is int max");
-	return (nb);
+    len = 0;
+    index = 0;
+    nb = 1;
+    if (str[index] == ' ')
+        index++;
+    else if (str[index] == '+')
+        index++;
+    else if (!is_digit(str[index]))
+        error_msg("Only gidits accepted");
+    else if (str[index] == '-')
+        error_msg("Only positive numbers accepted");
+    nb = str;
+    while(is_digit(str[index]))
+        len++;
+    if (len > 10)
+        error_msg("Error! INT MAX is the limit");
+    return (nb);
 }
-static long ft_atol(const char *str)
+static long    ft_atol(const char *str)
 {
-	long	num;
+    long    num;
 
-	num = 0;
-	str = valid_input(str);
-	while (is_digit(*str))
-		num = (num * 10) + (*str++ - 48);
-	if (num > INT_MAX)
-		ft_exit_error("INT_MAX is the limit\n");
-	return (num);
+    str = valid_input_check(&str);
+    while(is_digit(*str))
+        num = (num * 10) + (*str++ - 48);
+    if (num > INT_MAX)
+        error_msg("INT MAX is the limit, please enter smaller numbers");
+    return (num);
 }
-void	parsing(t_table *table, char **av)
+
+void    parsing(int argc, char **argv)
 {
-	table->nbr_philo = ft_atol(av[1]);
-	table->time_to_die = ft_atol(av[2]) * 1e3; //scientific notationfor 1 w 3 0
-	table->time_to_eat = ft_atol(av[3]) * 1e3;
-	table->time_to_sleep = ft_atol(av[4]) * 1e3;
-	if (table->time_to_die < 6e3 || table->time_to_eat < 6e3 
-		||	table->time_to_sleep < 6e3)
-			ft_exit_error("Use timestamps more than 60ms");
-	if (av[5])
-		table->x_time_meals = ft_atol(av[5]);
-	else
-		table->x_time_meals = -1;
+    t_table *table;
+
+    table->nbr_philos = atol(argv[1]);
+    table->time_die = atol(argv[2]);
+    table->time_eat = atol(argv[3]);
+    table->time_sleep = atol(argv[4]);
+    if (table->time_die < 60 || table->time_eat < 60 
+        || table->time_sleep < 60 || table->nbr_philos <= 0)
+            return 1;
+    if (argv[5])
+        table->nb_meals = atol(argv[5]);
+    else if (!argv[5])
+        table->nb_meals = -1;
 }
