@@ -11,6 +11,7 @@ SRC = \
 		./srcs/routine.c \
 		./srcs/init.c \
 		./srcs/utils.c\
+		./srcs/time.c \
 		
 
 OBJ = $(SRC:.c=.o)

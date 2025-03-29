@@ -6,7 +6,7 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:03:29 by mavissar          #+#    #+#             */
-/*   Updated: 2025/03/29 15:25:20 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/03/29 18:24:52 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,17 @@ long	ft_atol(const char *str)
 	return (num);
 }
 
-long	current_time(void)
+void	error_msg(char *error)
 {
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	return ((now.tv_sec * 1000) + (now.tv_usec / 1000));
+	printf("%s\n", error);
+	exit(EXIT_FAILURE);
 }
 
-void	my_usleep(long time_sleep)
+void	print_action(t_philo *philo, char *action)
 {
-	long	strt;
-
-	strt = current_time();
-	while ((current_time() - strt) < time_sleep)
-		usleep(100);
+	pthread_mutex_lock(&philo->table->print_mutex);
+	if (!philo->table->simulation_stop || ft_strstr(action, "died"))
+		printf("%ld %ld %s\n", current_time() - philo->table->begining,
+			philo->id, action);
+	pthread_mutex_unlock(&philo->table->print_mutex);
 }

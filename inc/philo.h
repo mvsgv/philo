@@ -6,7 +6,7 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:56:05 by mavissar          #+#    #+#             */
-/*   Updated: 2025/03/29 15:38:25 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/03/29 18:23:58 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_table
 	long			time_die;
 	long			time_sleep;
 	long			nb_meals;
+	long			begining;
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	check_mutex;
@@ -82,20 +83,21 @@ typedef struct s_table
 
 }					t_table;
 
-void				error_msg(char *error);
+/*init*/
 t_table				*init_param(char **argv);
 void				init_philos(t_table *table);
+/*utils*/
+void				error_msg(char *error);
 void				my_usleep(long time_sleep);
 void				print_action(t_philo *philo, char *action);
-void				eat(t_philo *philo);
-void				*routine(void *arg);
-void				find_fork(t_philo *philo,
-						pthread_mutex_t **ff, pthread_mutex_t **sf);
-char				*ft_strstr(const char *str, const char *find);
-void				start_dinner(t_table *table);
-long				current_time(void);
 long				ft_atol(const char *str);
+char				*ft_strstr(const char *str, const char *find);
+/*routine*/
+void				*monitor_routine(void *arg);
+void				*routine(void *arg);
+void				eat(t_philo *philo);
 bool				is_philo_dead(t_philo *philo);
-void				clean_up(t_table *data);
+/*time*/
+long				current_time(void);
 
 #endif

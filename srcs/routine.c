@@ -6,13 +6,13 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 11:08:34 by mavissar          #+#    #+#             */
-/*   Updated: 2025/03/29 15:47:22 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/03/29 18:25:47 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	find_fork(t_philo *philo, pthread_mutex_t **ff, pthread_mutex_t **sf)
+static void	find_f(t_philo *philo, pthread_mutex_t **ff, pthread_mutex_t **sf)
 {
 	if (philo->id % 2 == 0)
 	{
@@ -31,7 +31,7 @@ void	eat(t_philo *philo)
 	pthread_mutex_t	*first_fork;
 	pthread_mutex_t	*second_fork;
 
-	find_fork(philo, &first_fork, &second_fork);
+	find_f(philo, &first_fork, &second_fork);
 	pthread_mutex_lock(first_fork);
 	print_action(philo, W "has taken first fork 𐂐" RST);
 	pthread_mutex_lock(second_fork);
@@ -68,7 +68,7 @@ static bool	philo_died(t_table *table, t_philo *philo)
 	return (false);
 }
 
-static void	*monitor_routine(void *arg)
+void	*monitor_routine(void *arg)
 {
 	t_table	*table;
 	long	i;
@@ -85,18 +85,21 @@ static void	*monitor_routine(void *arg)
 	return (NULL);
 }
 
-void	start_dinner(t_table *table)
+void	*routine(void *arg)
 {
-	pthread_t	monitor;
-	int			i;
+	t_philo	*philo;
 
-	i = -1;
-	init_philos(table);
-	table->simulation_stop = false;
-	while (++i < table->nbr_philos)
-		pthread_create(&table->philo[i].thread, NULL, routine,
-			&table->philo[i]);
-	pthread_create(&monitor, NULL, monitor_routine, table);
-	pthread_join(monitor, NULL);
-	table->simulation_stop = true;
+	philo = (t_philo *)arg;
+	while (!philo->table->simulation_stop)
+	{
+		print_action(philo, BLUE "is thinking ( ꩜ ᯅ ꩜;) ? 𖡎" RST);
+		if (philo->table->simulation_stop || philo->table->nbr_philos == 1)
+			break ;
+		eat(philo);
+		if (philo->table->simulation_stop)
+			break ;
+		print_action(philo, Y "is sleeping _( _ _)__...zzZ ✩₊˚.⋆☾⋆⁺₊✧" RST);
+		my_usleep(philo->table->time_sleep);
+	}
+	return (NULL);
 }

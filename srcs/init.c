@@ -6,7 +6,7 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:04:24 by mavissar          #+#    #+#             */
-/*   Updated: 2025/03/29 15:23:45 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/03/29 18:15:58 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	init_philos(t_table *table)
 	}
 }
 
-void	init_forks(t_table *table)
+static void	init_forks(t_table *table)
 {
 	int	i;
 
@@ -51,6 +51,7 @@ static void	*init_table(char **argv)
 		error_msg("Memory allocation failed for table");
 	table->is_dead = 0;
 	table->simulation_stop = false;
+	table->begining = current_time();
 	table->nbr_philos = ft_atol(argv[1]);
 	table->time_die = ft_atol(argv[2]);
 	table->time_eat = ft_atol(argv[3]);
@@ -81,12 +82,4 @@ t_table	*init_param(char **argv)
 	while (++i < table->nbr_philos)
 		table->philo[i].table = table;
 	return (table);
-}
-
-void	print_action(t_philo *philo, char *action)
-{
-	pthread_mutex_lock(&philo->table->print_mutex);
-	if (!philo->table->simulation_stop || ft_strstr(action, "died"))
-		printf("%ld %ld %s\n", current_time(), philo->id, action);
-	pthread_mutex_unlock(&philo->table->print_mutex);
 }

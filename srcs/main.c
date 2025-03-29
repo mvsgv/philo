@@ -6,19 +6,13 @@
 /*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:45:41 by mavissar          #+#    #+#             */
-/*   Updated: 2025/03/29 15:47:06 by mavissar         ###   ########.fr       */
+/*   Updated: 2025/03/29 18:22:40 by mavissar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	error_msg(char *error)
-{
-	printf("%s\n", error);
-	exit(EXIT_FAILURE);
-}
-
-void	clean_up(t_table *table)
+static void	clean_up(t_table *table)
 {
 	int	i;
 
@@ -37,23 +31,20 @@ void	clean_up(t_table *table)
 	free(table);
 }
 
-void	*routine(void *arg)
+static void	start_dinner(t_table *table)
 {
-	t_philo	*philo;
+	pthread_t	monitor;
+	int			i;
 
-	philo = (t_philo *)arg;
-	while (!philo->table->simulation_stop)
-	{
-		print_action(philo, BLUE "is thinking ( ꩜ ᯅ ꩜;) ? 𖡎" RST);
-		if (philo->table->simulation_stop || philo->table->nbr_philos == 1)
-			break ;
-		eat(philo);
-		if (philo->table->simulation_stop)
-			break ;
-		print_action(philo, Y "is sleeping _( _ _)__...zzZ ✩₊˚.⋆☾⋆⁺₊✧" RST);
-		my_usleep(philo->table->time_sleep);
-	}
-	return (NULL);
+	i = -1;
+	init_philos(table);
+	table->simulation_stop = false;
+	while (++i < table->nbr_philos)
+		pthread_create(&table->philo[i].thread, NULL, routine,
+			&table->philo[i]);
+	pthread_create(&monitor, NULL, monitor_routine, table);
+	pthread_join(monitor, NULL);
+	table->simulation_stop = true;
 }
 
 int	main(int argc, char **argv)
