@@ -1,30 +1,34 @@
 NAME = philo
 
-CC = cc
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
+CFLAGS += -fsanitize=address
 
-CFLAGS = -Wall -Werror -Wextra -pthread
-SRCS = \
-			./srcs/main.c \
-			./srcs/parsing.c \
-			
+LIB = -lpthread
 
-OBJ = $(SRCS:.c=.o)
+SRC = \
+		./srcs/main.c \
+		./srcs/routine.c \
+		./srcs/init.c \
+		./srcs/utils.c\
+		
+
+OBJ = $(SRC:.c=.o)
+
+.c.o:
+	@$(CC) $(CFLAGS) $< -o $@
+
+$(NAME): $(LIBFT) $(SRC)
+		$(CC) $(SRC) $(CFLAGS) $(LIB) -o $(NAME)
 
 all: $(NAME)
 
-%.o: %.c
-	@ $(CC) -c $(CFLAGS) -I includes -o $@ $<
-
-$(NAME): $(OBJ)
-	@ $(CC) $(CFLAGS) $(OBJ) -o $(NAME)
-
 clean:
-	@echo "Cleaning"
-	@rm -f $(OBJ)
+		@rm -rf $(OBJ)
 
 fclean: clean
-	@rm -f $(NAME)
+		@rm -rf $(NAME)
 
-re: fclean all
+re:	fclean all
 
 .PHONY: all clean fclean re

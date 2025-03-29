@@ -1,49 +1,75 @@
-#include "philo.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mavissar <mavissar@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/27 18:45:41 by mavissar          #+#    #+#             */
+/*   Updated: 2025/03/29 15:47:06 by mavissar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void    init_philos(t_table *table)
+#include "../inc/philo.h"
+
+void	error_msg(char *error)
 {
-    int i;
-
-    i = 0;
-    table->philo = malloc(sizeof(t_philo) * table->nbr_philos);
-    if (!table->philo)
-        error_msg("Memory allocation failed for philos");
-    while (i++ < table->nbr_philos)
-    {
-        table->philo[i].id = i + 1;
-        table->philo[i].meals_eaten = 0;
-        table->philo[i].last_meals_time = 0;
-        table->philo[i].left_fork = &table->forks[i];
-        table->philo[i].right_fork = &table->forks[(i + 1) % table->nbr_philos];
-    }
+	printf("%s\n", error);
+	exit(EXIT_FAILURE);
 }
 
-void    init_forks(t_table *table)
+void	clean_up(t_table *table)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    table->forks = malloc(sizeof(pthread_mutex_t) * table->nbr_philos);
-    if (!table->forks)
-        error_msg("Failed malloc for forks");
-    while (i < table->nbr_philos)
-        pthread_mutex_init(&table->forks[i], NULL);
-
+	table->simulation_stop = true;
+	my_usleep(1000);
+	i = -1;
+	while (++i < table->nbr_philos)
+		pthread_join(table->philo[i].thread, NULL);
+	i = -1;
+	while (++i < table->nbr_philos)
+		pthread_mutex_destroy(&table->forks[i]);
+	pthread_mutex_destroy(&table->print_mutex);
+	pthread_mutex_destroy(&table->check_mutex);
+	free(table->philo);
+	free(table->forks);
+	free(table);
 }
 
-int main(int argc, char**argv)
+void	*routine(void *arg)
 {
-    t_table *table;
-    if (argc == 5 || argc == 6)
-    {
-        parsing(&table, argv);
-        //init
-        //start dinner
-        //clean
-    }
-    else 
-    {
-        error_msg("Wrong number of arguments."
-        " correct input : ./philo 5 800 200 200");
-    }
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	while (!philo->table->simulation_stop)
+	{
+		print_action(philo, BLUE "is thinking ( ꩜ ᯅ ꩜;) ? 𖡎" RST);
+		if (philo->table->simulation_stop || philo->table->nbr_philos == 1)
+			break ;
+		eat(philo);
+		if (philo->table->simulation_stop)
+			break ;
+		print_action(philo, Y "is sleeping _( _ _)__...zzZ ✩₊˚.⋆☾⋆⁺₊✧" RST);
+		my_usleep(philo->table->time_sleep);
+	}
+	return (NULL);
+}
+
+int	main(int argc, char **argv)
+{
+	t_table	*table;
+
+	table = NULL;
+	if (argc == 5 || argc == 6)
+	{
+		table = init_param(argv);
+		start_dinner(table);
+		clean_up(table);
+	}
+	else
+	{
+		error_msg("Wrong number of arguments."
+			" correct input : ./philo 5 800 200 200");
+	}
 }
